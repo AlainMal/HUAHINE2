@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Carte MediWest</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <style>
+        html, body { height: 100%; margin: 0; }
+        #map { width: 100%; height: 100vh; }
+        #info {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            background: white;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <div id="info"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Position initiale
+        const initialPosition = [43.243757, 5.365660];
+
+        var map = L.map('map', {
+            zoomSnap: 1,
+            zoomDelta: 1,
+            minZoom: 3,
+            maxZoom: 18
+        }).setView(initialPosition, 8);
+
+        const info = document.getElementById('info');
+        function updateInfo(text) {
+            info.innerHTML = text;
+        }
+
+        // Définir un icône personnalisé pour la position
+        var customIcon = L.icon({
+            iconUrl: '/static/icone/VoilierImage.png', // URL de l'image
+            iconSize: [35, 55], // Taille de l'icône (largeur, hauteur)
+            iconAnchor: [16, 55], // Point d'ancrage (bas-centre de l'image)
+            popupAnchor: [0, -55] // Position de la popup par rapport au marqueur
+        });
+
+        // Ajouter un marqueur avec l'icône personnalisée
+        var currentMarker = L.marker(initialPosition, { icon: customIcon }).addTo(map)
+            .bindPopup("Salut tout le monde ! Je suis HUAHINE")
+            .openPopup();
+
+        // Suivi de ma position
+        var polyline = L.polyline([initialPosition], {color: 'red'}).addTo(map);
+
+        updateInfo(`Zoom: ${map.getZoom()}<br>Position: ${initialPosition[0].toFixed(5)}, ${initialPosition[1].toFixed(5)}`);
+
+        const mbtilesLayer = L.tileLayer('/tiles/{z}/{x}/{y}.png', {
+            tms: true,
+            opacity: 1.0,
+            attribution: 'Google - Map'
+        }).addTo(map);
+
+        // Ajouter un gestionnaire d'événements pour le clic sur le marqueur
+        currentMarker.on('click', function() {
+            this.openPopup();
+        });
+
+        // Fonction pour mettre à jour la position sur la carte
+        async function updatePosition() {
+            try {
+                // Appel à une API Flask pour récupérer les coordonnées
+                const response = await fetch('/api/coords');
+                const data = await response.json();
+
+                // Extraction des nouvelles coordonnées
+                const { latitude, longitude } = data;
+
+                // Mise à jour du marqueur personnalisé
+                var newLatLng = new L.LatLng(latitude, longitude);
+                currentMarker.setLatLng(newLatLng);
+
+                // Recentre la carte tout en gardant le niveau de zoom
+                map.setView(newLatLng, map.getZoom());
+
+                // Ajouter les nouvelles coordonnées à l'itinéraire (polyligne)
+                polyline.addLatLng(newLatLng);
+
+                console.log(`Position mise à jour : latitude=${latitude}, longitude=${longitude}`);
+            } catch (err) {
+                console.error("Erreur de mise à jour des coordonnées :", err);
+            }
+        }
+
+        // Mise à jour toutes les 3 secondes
+        setInterval(updatePosition, 3000);
+
+        // Mise à jour des informations lors du déplacement/zoom
+        map.on('moveend zoomend', () => {
+            const center = map.getCenter();
+            updateInfo(`Zoom: ${map.getZoom()}<br>Position: ${center.lat.toFixed(5)}, ${center.lng.toFixed(5)}`);
+        });
+
+        // Log des événements de tuiles
+        mbtilesLayer.on('tileloadstart', (e) => {
+            console.log('Chargement tuile:', e.coords);
+        });
+
+        mbtilesLayer.on('tileerror', (e) => {
+            console.error('Erreur tuile:', e.coords);
+        });
+    </script>
+</body>
+</html>
