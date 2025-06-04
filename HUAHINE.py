@@ -935,7 +935,7 @@ async def map_page():
 async def get_tile(z, x, y):
     try:
         # Convertir y en coordonnées TMS
-        # y_tms = (1 << z) - 1 - y
+        y_tms = (1 << z) - 1 - y
 
         conn = sqlite3.connect('static/cartes.mbtiles')
         cursor = conn.cursor()
@@ -952,7 +952,7 @@ async def get_tile(z, x, y):
         if result and result[0]:
             return Response(result[0], mimetype='image/png')
         else:
-            print(f"Tuile non trouvée: z={z}, x={x}, y={y}")
+            print(f"Tuile non trouvée: z={z}, x={x}, y={y_tms}")
             return '', 204
 
     except Exception as e:
