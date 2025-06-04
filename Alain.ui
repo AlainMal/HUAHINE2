@@ -693,8 +693,6 @@
    </property>
   </action>
  </widget>
- <resources>
-  <include location="../GUI_Alain/images/alain.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
