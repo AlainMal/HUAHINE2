@@ -32,7 +32,7 @@
             zoomSnap: 1,
             zoomDelta: 1,
             minZoom: 3,
-            maxZoom: 18
+            maxZoom: 19
         }).setView(initialPosition, 8);
 
         const info = document.getElementById('info');
@@ -69,11 +69,29 @@
             this.openPopup();
         });
 
+        mbtilesLayer.on('load', function() {
+    console.log('Couche de tuiles chargée avec succès');
+});
+
+mbtilesLayer.on('loading', function() {
+    console.log('Chargement des tuiles en cours...');
+});
+
+// Améliorer le log des erreurs
+mbtilesLayer.on('tileerror', (e) => {
+    console.error('Erreur tuile:', {
+        coords: e.coords,
+        url: e.tile.src,
+        status: e.tile.errorStatus
+    });
+});
+
+
         // Fonction pour mettre à jour la position sur la carte
         async function updatePosition() {
             try {
                 // Appel à une API Flask pour récupérer les coordonnées
-                const response = await fetch('/api/coords');
+                const response = await fetch('/api/get_coordinates');
                 const data = await response.json();
 
                 // Extraction des nouvelles coordonnées
@@ -84,7 +102,7 @@
                 currentMarker.setLatLng(newLatLng);
 
                 // Recentre la carte tout en gardant le niveau de zoom
-                map.setView(newLatLng, map.getZoom());
+                // map.setView(newLatLng, map.getZoom());
 
                 // Ajouter les nouvelles coordonnées à l'itinéraire (polyligne)
                 polyline.addLatLng(newLatLng);
@@ -96,7 +114,7 @@
         }
 
         // Mise à jour toutes les 3 secondes
-        setInterval(updatePosition, 3000);
+        setInterval(updatePosition, 30000);
 
         // Mise à jour des informations lors du déplacement/zoom
         map.on('moveend zoomend', () => {

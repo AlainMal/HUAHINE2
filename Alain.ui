@@ -128,6 +128,7 @@
        </property>
        <property name="font">
         <font>
+         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -163,6 +164,7 @@
        <property name="font">
         <font>
          <pointsize>8</pointsize>
+         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -243,6 +245,7 @@
        </property>
        <property name="font">
         <font>
+         <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
@@ -266,6 +269,7 @@
        <property name="font">
         <font>
          <pointsize>8</pointsize>
+         <weight>50</weight>
          <bold>false</bold>
         </font>
        </property>
@@ -416,7 +420,7 @@
      <x>0</x>
      <y>0</y>
      <width>742</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFichier">
@@ -425,8 +429,8 @@
     </property>
     <addaction name="actionOuvrir"/>
     <addaction name="actionVoir"/>
-    <addaction name="actionExport"/>
     <addaction name="actionImporter"/>
+    <addaction name="actionExport"/>
     <addaction name="separator"/>
     <addaction name="actionQuitter"/>
    </widget>
@@ -434,6 +438,7 @@
     <property name="title">
      <string>Aide</string>
     </property>
+    <addaction name="actionAide"/>
     <addaction name="actionAbout"/>
    </widget>
    <widget class="QMenu" name="menuBus_CAN">
@@ -470,8 +475,8 @@
    </attribute>
    <addaction name="actionOuvrir"/>
    <addaction name="actionVoir"/>
-   <addaction name="actionExport"/>
    <addaction name="actionImporter"/>
+   <addaction name="actionExport"/>
    <addaction name="separator"/>
    <addaction name="actionOpen"/>
    <addaction name="actionClose"/>
@@ -506,10 +511,10 @@
      <normaloff>../HUAHINE/icones/Table.ico</normaloff>../HUAHINE/icones/Table.ico</iconset>
    </property>
    <property name="text">
-    <string>Importer le texte CAN sur la table</string>
+    <string>Importer le fichier texte CAN sur la table</string>
    </property>
    <property name="toolTip">
-    <string>Importer le fchier CAN dans la table</string>
+    <string>Importer le fichier CAN dans la table</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+I</string>
@@ -536,7 +541,7 @@
      <normaloff>../HUAHINE/icones/Ouvir.gif</normaloff>../HUAHINE/icones/Ouvir.gif</iconset>
    </property>
    <property name="text">
-    <string>Enregistrer le bus CAN sur du texte</string>
+    <string>Ouvrir un fichier texte</string>
    </property>
    <property name="toolTip">
     <string>Ouvrir un fichier texte</string>
@@ -635,7 +640,7 @@
   <action name="actionExport">
    <property name="icon">
     <iconset>
-     <normaloff>../HUAHINE/icones/csv.gif</normaloff>../HUAHINE/icones/csv.gif</iconset>
+     <normaloff>../HUAHINE/icones/csv.png</normaloff>../HUAHINE/icones/csv.png</iconset>
    </property>
    <property name="text">
     <string>Exporter en CSV le NMEA 2000</string>
@@ -657,6 +662,18 @@
    </property>
    <property name="toolTip">
     <string>Voir le voilier sur la carte</string>
+   </property>
+  </action>
+  <action name="actionAide">
+   <property name="icon">
+    <iconset>
+     <normaloff>icones/aides.png</normaloff>icones/aides.png</iconset>
+   </property>
+   <property name="text">
+    <string>Aide</string>
+   </property>
+   <property name="shortcut">
+    <string>F1</string>
    </property>
   </action>
  </widget>

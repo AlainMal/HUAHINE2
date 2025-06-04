@@ -11,10 +11,12 @@ import ctypes
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QTableView, QMessageBox, QFileDialog
 from PyQt5.QtWidgets import QMainWindow, QAbstractItemView
-from PyQt5.QtCore import Qt, QAbstractTableModel, QModelIndex
+from PyQt5.QtCore import Qt, QAbstractTableModel, QModelIndex, pyqtSlot
 from PyQt5 import uic
 from PyQt5.QtGui import QIcon
 from quart import Quart, render_template, jsonify, Response
+
+from serveur_aide import start_help_server
 
 
 # Import des packages personnalisés
@@ -23,6 +25,48 @@ from Package.TempsReel import TempsReel
 from Package.NMEA_2000 import NMEA2000
 from Package.CANApplication import CANApplication
 from Package.constante import *
+
+# coordinates = []
+# Au niveau global de votre fichier, définissez coordinates comme ceci :
+coordinates: dict[str, float] = {
+    "latitude": 0.0,
+    "longitude": 0.0
+}
+
+
+class CoordinatesManager:
+    @staticmethod
+    def update_coordinates(latitude: float, longitude: float) -> dict[str, float]:
+        """Met à jour les coordonnées dans les variables globales.
+
+        Args:
+            latitude (float): La latitude en degrés décimaux
+            longitude (float): La longitude en degrés décimaux
+
+        Returns:
+            dict[str, float]: Dictionnaire contenant les coordonnées mises à jour
+        """
+        try:
+            global coordinates
+            # Vérification et conversion des types
+            lat = float(latitude)
+            lon = float(longitude)
+
+            # Mise à jour du dictionnaire
+            coordinates.update({
+                "latitude": lat,
+                "longitude": lon
+            })
+
+            print(f"Coordonnées mises à jour : latitude={lat}, longitude={lon}")
+            return coordinates
+
+        except ValueError as e:
+            print(f"Erreur de conversion des coordonnées : {e}")
+            raise
+        except Exception as e:
+            print(f"Erreur inattendue : {e}")
+            raise
 
 # ********************************** CLASSE MODELE DE LA TABLE *********************************************************
 # Cette classe sert de modèle à la table incluse dans MainWindow().
@@ -206,6 +250,7 @@ class MainWindow(QMainWindow):
         self.actionExport.triggered.connect(self.on_click_Export)
         self.actionMap.triggered.connect(self.on_click_map)
         self.actionQuitter.triggered.connect(self.close_both)
+        self.actionAide.triggered.connect(self.show_help)
 
         # Initialse les menus innacessibles.
         self.actionClose.setEnabled(False)
@@ -214,6 +259,9 @@ class MainWindow(QMainWindow):
         self.actionImporter.setEnabled(False)
         self.actionVoir.setEnabled(False)
         self.actionExport.setEnabled(False)
+
+        # Démarrer le serveur d'aide
+        start_help_server()
 
     @property
     def nmea_2000(self):
@@ -693,6 +741,10 @@ class MainWindow(QMainWindow):
             print(f"Erreur inattendue : {e}")
             QMessageBox.critical(self, "EXPORT CSV", "Le fichier est dèjà ouvert!")
 
+    @pyqtSlot()
+    def show_help(self):
+        webbrowser.open("http://127.0.0.1:5001/")
+
     # Méthode qui lance la "quart_app" ---------------------------------------------------------------------------------
     async def lancer_quart(self):  # Un seul self ici, pas dans les parenthèses
         """Lance le serveur Quart dans une boucle asyncio."""
@@ -746,21 +798,6 @@ class MainWindow(QMainWindow):
 
         # Ouvrir la carte dans le navigateur
         webbrowser.open("http://127.0.0.1:5000/map")
-
-    # Méthode appelée quand on a les coordonnées (toutes les 1 sur 25 de scrutation) ---------------------------------------
-    @staticmethod
-    def update_coordinates(latitude, longitude):
-        try:
-            """Met à jour les coordonnées dans les variables globales."""
-            global coordinates
-            coordinates["latitude"] = latitude
-            coordinates["longitude"] = longitude
-            print(f"Coordonnées mises à jour : latitude={latitude}, longitude={longitude}")
-            return coordinates
-
-        except Exception as e:
-            print(f"Erreur sur Coordonnées {e}")
-            raise
 
     # Méthode pour avoir quatre boutons personalisés, qui sont le précédent, le suivant, valider et annuler ------------
     @staticmethod
@@ -835,7 +872,7 @@ class MainWindow(QMainWindow):
             about_box.exec_()
 # ======================================= FIN DES METHODES =============================================================
 
-# ========================== METHODE QUI SONT ASYNCHRONE SUR JSON ======================================================
+# ========================== METHODE QUI SONT ASYNCHRONE SUR QUART =====================================================
 import sqlite3
 
 # Application Quart
@@ -852,7 +889,7 @@ DEFAULT_CONFIG = {
     },
     "bounds": {
         "minZoom": 3,
-        "maxZoom": 18
+        "maxZoom": 19
     }
 }
 
@@ -897,16 +934,11 @@ async def map_page():
 @quart_app.route('/tiles/<int:z>/<int:x>/<int:y>.png')
 async def get_tile(z, x, y):
     try:
-        # Vérifier si le niveau de zoom est valide
-        # if z not in [5, 6, 8, 10, 12, 14, 16]:
-        #     print(f"Niveau de zoom non valide: {z}")
-        #     return '', 404
+        # Convertir y en coordonnées TMS
+        # y_tms = (1 << z) - 1 - y
 
         conn = sqlite3.connect('static/cartes.mbtiles')
         cursor = conn.cursor()
-
-        # Convertir y en coordonnées TMS
-        # y_tms = (1 << z) - 1 - y
 
         cursor.execute("""
             SELECT tile_data
@@ -934,7 +966,7 @@ async def get_coordinates():
     except Exception as e:
         print(f"Erreur lors de la récupération des coordonnées : {e}")
         return jsonify({"error": str(e)}), 500
-# ===================================== FIN DE JSON ====================================================================
+# ===================================== FIN DE QUART ====================================================================
 
 if __name__ == "__main__":
     print(f"SQLite Version: {sqlite3.sqlite_version}")
