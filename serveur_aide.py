@@ -12,18 +12,21 @@ def index():
 def import_page():
     return render_template('import.html')
 
+@app.route('/export.html')
+def export_page():
+    return render_template('export.html')
 
-@app.route('/carte')
-def carte():
-    return render_template('carte.html')
-
-@app.route('/donnees')
-def donnees():
-    return render_template('donnees.html')
-
-@app.route('/outils')
-def outils():
-    return render_template('outils.html')
+# @app.route('/carte')
+# def carte():
+#     return render_template('carte.html')
+#
+# @app.route('/donnees')
+# def donnees():
+#     return render_template('donnees.html')
+#
+# @app.route('/outils')
+# def outils():
+#     return render_template('outils.html')
 
 @app.route('/export')
 def export():

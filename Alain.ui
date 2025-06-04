@@ -499,6 +499,7 @@
    <addaction name="actionStop"/>
    <addaction name="actionMap"/>
    <addaction name="actionStatus"/>
+   <addaction name="actionAide"/>
    <addaction name="separator"/>
    <addaction name="actionQuitter"/>
   </widget>
