@@ -1,23 +1,55 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>{% block title %}Aide de l'application{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
-</head>
-<body>
-    <nav>
-        <ul>
-            <li><a href="/">Accueil</a></li>
-            <li><a href="/import">Import</a></li>
-            <li><a href="/export">Export</a></li>
-            <li><a href="/map">Carte</a></li>
-        </ul>
-    </nav>
+{% extends "base.html" %}
 
-    <div class="content">
-        {% block content %}{% endblock %}
+{% block title %}Aide - Import{% endblock %}
+
+{% block content %}
+<style>
+    nav #export {
+    color: white;
+    text-decoration: none;
+    background-color: brown;
+}
+</style>
+<h1>Export de données vers NMEA 2000</h1>
+
+<div class="section">
+    <h2>Comment exporter le NMEA 2000</h2>
+    <ol>
+        <li>Cliquez sur l'ouverture d'un fichier texte dans la barre d'outils.
+            <ul>
+                <li>Choisissez un fichier éxistant.</li>
+                <li>Cliquer sur 'Enregistrer'.</li>
+            </ul>
+        </li>
+        <br>
+        <li>Cliquez sur importer le fichier texte dans la barre d'outils.
+            <ul>
+                <li>Vous avez la possibilité de valider, ou de choisir les numéros des lignes.</li>
+            </ul>
+        </li>
+        <br>
+        <li>Vous avez à présent la possibilité de cliquez sur la table.
+            <ul>
+                <li>Vous verrez alors les résultats de la conversion en NMEA 2000.</li>
+            </ul>
+        </li>
+        <br>
+    </ol>
+
+    <div class="tip">
+        <strong>Information :</strong> Vous verrez sur le fichier .csv les différentes valeurs des PGN à chaques lignes.
     </div>
-</body>
-</html>
+
+    <h3>Formats supportés</h3>
+    <ul>
+        <li>Fichiers .csv</li>
+    </ul>
+</div>
+
+<script>
+// JavaScript spécifique à la page d'import si nécessaire
+document.addEventListener('DOMContentLoaded', function() {
+    // Votre code JavaScript ici
+});
+</script>
+{% endblock %}

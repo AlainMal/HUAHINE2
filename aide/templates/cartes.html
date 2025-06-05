@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Aide - Import{% endblock %}
+
+{% block content %}
+<style>
+    nav #carte {
+    color: white;
+    text-decoration: none;
+    background-color: brown;
+}
+</style>
+<h1>Visualisation de la carte</h1>
+
+<div class="map-preview">
+    <img src="{{ url_for('static', filename='images/carte-preview.png') }}"
+         alt="Aperçu de la carte"
+         style="width: 100%;
+                max-height: 200px;
+                object-fit: cover;
+                margin-bottom: 20px;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+</div>
+
+<div class="section">
+    <h2>Comment visualiser le voilier sur la carte</h2>
+    <ol>
+        <li>Cliquez sur l'icone en forme de voilier'.
+            <ul>
+                <li>Vous voyez ou est votre bateau sur la carte.</li>
+                <li>Vous pouvez diminuer ou augmenter le zoom.</li>
+            </ul>
+        </li>
+        <br>
+    </ol>
+
+    <div class="tip">
+        <strong>Remarque :</strong> Vous suivez votre bateau avec un rafraichissement de trois secondes.
+    </div>
+
+    <h3>Formats supportés</h3>
+    <ul>
+        <li>Cartes .mbtiles</li>
+    </ul>
+</div>
+
+<script>
+// JavaScript spécifique à la page d'import si nécessaire
+document.addEventListener('DOMContentLoaded', function() {
+    // Votre code JavaScript ici
+});
+</script>
+{% endblock %}

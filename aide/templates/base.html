@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Aide de l'application{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a id="accueil" href="/">Accueil</a></li>
+            <li><a id="import" href="/import">Import</a></li>
+            <li><a id="export" href="/export">Export</a></li>
+            <li><a id="carte" href="/cartes">Carte</a></li>
+        </ul>
+    </nav>
+
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

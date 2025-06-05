@@ -497,11 +497,15 @@
    <addaction name="actionClose"/>
    <addaction name="actionRead"/>
    <addaction name="actionStop"/>
+   <addaction name="separator"/>
    <addaction name="actionMap"/>
+   <addaction name="separator"/>
    <addaction name="actionStatus"/>
+   <addaction name="separator"/>
    <addaction name="actionAide"/>
    <addaction name="separator"/>
    <addaction name="actionQuitter"/>
+   <addaction name="separator"/>
   </widget>
   <action name="actionQuitter">
    <property name="checkable">

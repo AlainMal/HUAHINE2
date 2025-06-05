@@ -880,16 +880,16 @@ quart_app = Quart(__name__,
                   static_folder='static',
                   template_folder='templates')
 
-# Coordonnées centrées sur la Méditerranée occidentale
+# Coordonnées centrées sur le port de la pointe rouge
 DEFAULT_CONFIG = {
     "center": {
-        "latitude": 43.243,  # Centre approximatif de la Méditerranée occidentale
+        "latitude": 43.243,
         "longitude": 5.365,
         "zoom": 8
     },
     "bounds": {
         "minZoom": 3,
-        "maxZoom": 19
+        "maxZoom": 18
     }
 }
 

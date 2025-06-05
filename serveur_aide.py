@@ -8,29 +8,17 @@ app = Flask(__name__,
 def index():
     return render_template('index.html')
 
-@app.route('/import.html')
+@app.route('/import')
 def import_page():
     return render_template('import.html')
 
-@app.route('/export.html')
+@app.route('/export')
 def export_page():
     return render_template('export.html')
 
-# @app.route('/carte')
-# def carte():
-#     return render_template('carte.html')
-#
-# @app.route('/donnees')
-# def donnees():
-#     return render_template('donnees.html')
-#
-# @app.route('/outils')
-# def outils():
-#     return render_template('outils.html')
-
-@app.route('/export')
-def export():
-    return render_template('export.html')
+@app.route('/cartes')
+def cartes_page():
+    return render_template('cartes.html')
 
 def run_server():
     app.run(port=5001)
