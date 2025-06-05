@@ -5,18 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b4f313fb-dc6e-42f1-9535-917211e09b4a" name="Changes" comment="new">
-      <change afterPath="$PROJECT_DIR$/aide/templates/base.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/aide/templates/cartes.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Alain.ui" beforeDir="false" afterPath="$PROJECT_DIR$/Alain.ui" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/HUAHINE.py" beforeDir="false" afterPath="$PROJECT_DIR$/HUAHINE.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Package/CANApplication.py" beforeDir="false" afterPath="$PROJECT_DIR$/Package/CANApplication.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aide/static/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/aide/static/css/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aide/templates/export.html" beforeDir="false" afterPath="$PROJECT_DIR$/aide/templates/export.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/aide/templates/import.html" beforeDir="false" afterPath="$PROJECT_DIR$/aide/templates/import.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aide/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/aide/templates/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/serveur_aide.py" beforeDir="false" afterPath="$PROJECT_DIR$/serveur_aide.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -166,7 +156,15 @@
       <option name="project" value="LOCAL" />
       <updated>1749067856484</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="new">
+      <option name="closed" value="true" />
+      <created>1749129342150</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1749129342150</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
