@@ -7,6 +7,7 @@ import sys
 import webbrowser
 import qasync
 import ctypes
+import sqlite3
 
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QTableView, QMessageBox, QFileDialog
@@ -18,7 +19,6 @@ from quart import Quart, render_template, jsonify, Response
 
 from serveur_aide import start_help_server
 
-
 # Import des packages personnalisés
 from Package.CAN_dll import CANDll
 from Package.TempsReel import TempsReel
@@ -26,13 +26,11 @@ from Package.NMEA_2000 import NMEA2000
 from Package.CANApplication import CANApplication
 from Package.constante import *
 
-# coordinates = []
 # Au niveau global de votre fichier, définissez coordinates comme ceci :
 coordinates: dict[str, float] = {
     "latitude": 0.0,
     "longitude": 0.0
 }
-
 
 class CoordinatesManager:
     @staticmethod
@@ -873,8 +871,6 @@ class MainWindow(QMainWindow):
 # ======================================= FIN DES METHODES =============================================================
 
 # ========================== METHODE QUI SONT ASYNCHRONE SUR QUART =====================================================
-import sqlite3
-
 # Application Quart
 quart_app = Quart(__name__,
                   static_folder='static',

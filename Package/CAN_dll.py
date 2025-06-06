@@ -75,7 +75,7 @@ class CANDll:
 
             # Résultat du CAN : on sort si une trame a été reçue : result == 1.
             # Sinon il a des valeurs négatives qui représente différent défaut,
-            # dont le -7 qui indtque qu'il n'a pas reçu de tramrs.
+            # dont le -7 qui indtque qu'il n'a pas reçu de trames.
             if result <= -2 and result != -7:
                 # On ne traite pas les défauts, mais on le signale.
                 print("Défaut CAN : ", str(result))

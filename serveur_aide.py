@@ -20,6 +20,10 @@ def export_page():
 def cartes_page():
     return render_template('cartes.html')
 
+@app.route('/install')
+def install_page():
+    return render_template('install.html')
+
 def run_server():
     app.run(port=5001)
 
