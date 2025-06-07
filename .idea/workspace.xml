@@ -5,14 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b4f313fb-dc6e-42f1-9535-917211e09b4a" name="Changes" comment="new">
-      <change afterPath="$PROJECT_DIR$/aide/templates/install.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HUAHINE.py" beforeDir="false" afterPath="$PROJECT_DIR$/HUAHINE.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/aide/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/aide/templates/base.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/aide/templates/cartes.html" beforeDir="false" afterPath="$PROJECT_DIR$/aide/templates/cartes.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/aide/templates/export.html" beforeDir="false" afterPath="$PROJECT_DIR$/aide/templates/export.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/aide/templates/import.html" beforeDir="false" afterPath="$PROJECT_DIR$/aide/templates/import.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aide/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/aide/templates/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/serveur_aide.py" beforeDir="false" afterPath="$PROJECT_DIR$/serveur_aide.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aide/templates/install.html" beforeDir="false" afterPath="$PROJECT_DIR$/aide/templates/install.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,7 +58,7 @@
   &quot;keyToString&quot;: {
     &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;Python.CAN_dll.executor&quot;: &quot;Run&quot;,
+    &quot;Python.CAN_dll.executor&quot;: &quot;Debug&quot;,
     &quot;Python.HUAHINE.executor&quot;: &quot;Run&quot;,
     &quot;Python.serveur_aide.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
@@ -178,7 +177,15 @@
       <option name="project" value="LOCAL" />
       <updated>1749129874886</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="new">
+      <option name="closed" value="true" />
+      <created>1749193686933</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1749193686933</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

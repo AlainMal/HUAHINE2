@@ -13,22 +13,17 @@
 <div class="section">
     <h2>Comment exporter le NMEA 2000</h2>
     <ol>
-        <li>Cliquez sur l'ouverture d'un fichier texte dans la barre d'outils.
+        <li>Cliquez sur "Exporter NMEA 2000 vers CSV" dans la barre d'outils.
             <ul>
-                <li>Choisissez un fichier éxistant.</li>
+                <li>Choisissez ou créez un fichier .csv.</li>
                 <li>Cliquer sur 'Enregistrer'.</li>
             </ul>
+                      <li>Vous avez la possibilité de valider, ou de choisir les numéros des lignes.</li>
         </li>
         <br>
-        <li>Cliquez sur importer le fichier texte dans la barre d'outils.
+        <li>Vous avez à présent la possibilité de visualiser le fichier en NMEA 2000.
             <ul>
-                <li>Vous avez la possibilité de valider, ou de choisir les numéros des lignes.</li>
-            </ul>
-        </li>
-        <br>
-        <li>Vous avez à présent la possibilité de cliquez sur la table.
-            <ul>
-                <li>Vous verrez alors les résultats de la conversion en NMEA 2000.</li>
+                <li></li>
             </ul>
         </li>
         <br>
@@ -36,6 +31,23 @@
 
     <div class="tip">
         <strong>Information :</strong> Vous verrez sur le fichier .csv les différentes valeurs des PGN à chaques lignes.
+    </div>
+
+            <ul>
+                <li>Voyez un exemple du fichier .csv.</li>
+            </ul>
+
+
+    <div class="map-preview">
+    <img src="{{ url_for('static', filename='images/CSV.png') }}"
+         alt="Aperçu de la carte"
+         style="width: 100%;
+                max-height: 600px;
+                object-fit: cover;
+                margin: 0 auto 20px auto;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                display: block;">
     </div>
 
     <h3>Formats supportés</h3>

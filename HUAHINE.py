@@ -35,15 +35,6 @@ coordinates: dict[str, float] = {
 class CoordinatesManager:
     @staticmethod
     def update_coordinates(latitude: float, longitude: float) -> dict[str, float]:
-        """Met à jour les coordonnées dans les variables globales.
-
-        Args:
-            latitude (float): La latitude en degrés décimaux
-            longitude (float): La longitude en degrés décimaux
-
-        Returns:
-            dict[str, float]: Dictionnaire contenant les coordonnées mises à jour
-        """
         try:
             global coordinates
             # Vérification et conversion des types
