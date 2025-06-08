@@ -8,6 +8,10 @@ app = Flask(__name__,
 def index():
     return render_template('index.html')
 
+@app.route('/enregistre')
+def enregistre_page():
+    return render_template('enregistre.html')
+
 @app.route('/import')
 def import_page():
     return render_template('import.html')

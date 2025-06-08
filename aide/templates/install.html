@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Aide - Import{% endblock %}
+{% block title %}Aide - Installation{% endblock %}
 
 {% block content %}
 <style>
@@ -15,12 +15,12 @@
     <ol>
         <li>Il faut, pour l'instant, installer le CANUSB.
             <ul>
-                <li><a href="https://www.canusb.com/support/canusb-support/">Allez sur ce site</a> et récupérez le driver "CANUSB dll" dans la rubrique "Old Drivers"</li>
-                <li><a href="https://ftdichip.com/drivers/d2xx-drivers/">Allez sur ce site</a> et récupérez le driver "D2XX Direct Drivers" </li>
+                <li><a href="https://www.canusb.com/files/canusb_setup_win64.zip">Récuperez</a> le driver "CANUSB dll"</li>
+                <li><a href="https://ftdichip.com/wp-content/uploads/2025/03/CDM2123620_Setup.zip">Récupérez</a> le driver "D2XX" </li>
                 <li>Exécutez les deux setup.exe</li>
             </ul>
         </li>
-        <br>
+        <br/>
         <li>Branchement sur le bus NMEA 2000.
             <div class="map-preview">
                 <img src="{{ url_for('static', filename='images/cia102.gif') }}"
@@ -71,14 +71,14 @@
                 </div>
             </ul>
         </li>
-        <br>
-        <li>Vous avez maintenant tous raccordé et mis vos drivers dans votre PC.
+        <br/>
+        <li>Maintenant, vous avez tout raccordé et mis vos drivers dans votre PC.
             <ul>
-                <li>Ca devrait fonctionner.</li>
                 <li>Mettez en route votre réseau NMEA 2000.</li>
+                <li>Utilisez l'application.</li>
             </ul>
         </li>
-        <br>
+        <br/>
     </ol>
 
     <div class="tip">
@@ -104,7 +104,7 @@ class CanMsg(Structure):
         ("data", CanData)
     )
 
-# Défini les fonctions de la dll.
+# Erreurs sur les fonctions de la dll.
 class CanError(Exception):
     pass
 
