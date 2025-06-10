@@ -5,15 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b4f313fb-dc6e-42f1-9535-917211e09b4a" name="Changes" comment="new">
-      <change afterPath="$PROJECT_DIR$/aide/templates/enregistre.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aide/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/aide/templates/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HUAHINE.py" beforeDir="false" afterPath="$PROJECT_DIR$/HUAHINE.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Package/CANApplication.py" beforeDir="false" afterPath="$PROJECT_DIR$/Package/CANApplication.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/aide/templates/cartes.html" beforeDir="false" afterPath="$PROJECT_DIR$/aide/templates/cartes.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aide/templates/enregistre.html" beforeDir="false" afterPath="$PROJECT_DIR$/aide/templates/enregistre.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/aide/templates/export.html" beforeDir="false" afterPath="$PROJECT_DIR$/aide/templates/export.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/aide/templates/import.html" beforeDir="false" afterPath="$PROJECT_DIR$/aide/templates/import.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aide/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/aide/templates/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/aide/templates/install.html" beforeDir="false" afterPath="$PROJECT_DIR$/aide/templates/install.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/serveur_aide.py" beforeDir="false" afterPath="$PROJECT_DIR$/serveur_aide.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,12 +60,16 @@
   &quot;keyToString&quot;: {
     &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;Python.CAN_dll.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.CANApplication.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.CAN_dll.executor&quot;: &quot;Run&quot;,
     &quot;Python.HUAHINE.executor&quot;: &quot;Run&quot;,
+    &quot;Python.NMEA_2000.executor&quot;: &quot;Run&quot;,
     &quot;Python.serveur_aide.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Alain&quot;
+    &quot;git-widget-placeholder&quot;: &quot;Alain&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;terminal&quot;
   }
 }</component>
   <component name="SharedIndexes">
@@ -195,7 +199,23 @@
       <option name="project" value="LOCAL" />
       <updated>1749277871597</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="new">
+      <option name="closed" value="true" />
+      <created>1749378576642</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1749378576642</updated>
+    </task>
+    <task id="LOCAL-00016" summary="new">
+      <option name="closed" value="true" />
+      <created>1749378817931</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1749378817931</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

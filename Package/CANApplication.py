@@ -19,6 +19,8 @@ class CANApplication(QMainWindow):
         super().__init__()
 
         # Attribuez les actions si elles sont transmises
+        self._msg = None
+        self._encours = False
         self.actions = actions or {}
         self._main_window = main_window
         # Initialisez les attributs nécessaires ici
@@ -62,6 +64,7 @@ class CANApplication(QMainWindow):
         if self.actions.get("actionStatus"):
             self.actions["actionStatus"].triggered.connect(self.on_click_status)
 
+# ====================================== Débuts des méthodes CANApplication ============================================
     # Méthode pour lire le bus CAN -------------------------------------------------------------------------------------
     async def read(self):
         print("On est entré dans la boucle de lecture.")
@@ -80,21 +83,23 @@ class CANApplication(QMainWindow):
         )
 
         self._stop_flag = False
+        self._encours = False
         while not self._stop_flag:
+            self._encours = True
             try:
                 # Lecture bloquante déplacée dans un thread, avec un timeout
-                msg = await asyncio.wait_for(
+                self._msg = await asyncio.wait_for(
                     asyncio.to_thread(self._can_interface.read_dll, self._stop_flag,self._main_window),
                     timeout=2.0
                 )
 
-                if msg:  # Si une trame est reçue
+                if self._msg:  # Si une trame est reçue
                     n += 1
                     self.lab_connection.setText(str(n))  # Mise à jour du nombre de trames reçues.
 
                     # Appeler la méthode du traitement en TempsReel.
                     self._temps_reel.TempsReel(
-                        msg,
+                        self._msg,
                         self._file_path,
                         self.check_file.isChecked(),
                         self.check_buffer.isChecked(),
@@ -146,6 +151,17 @@ class CANApplication(QMainWindow):
         finally:
             print("Tâche `run()` terminée.")
 
+    # Méthode du bouton Read, mêt le fonction "run()" asynchone en route -----------------------------------------------
+    def on_click_read(self) -> None:
+        print("On est renté dans on_click_read")
+        self.loop = asyncio.get_event_loop()
+        if self.loop.is_running():  # Si une boucle tourne déjà
+            print("Boucle existante détectée, dans le clique sur bouton read...")
+            asyncio.ensure_future(self.run())  # Lancer en arrière-plan
+        else:
+            print("Lancement d'une nouvelle boucle avec run_until_complete...")
+            self.loop.run_until_complete(self.run())  # Exécuter la tâche immédiatement
+
     # Méthode pour arrêter toutes les taches asynchrone ----------------------------------------------------------------
     async def stop(self):
         """Arrêter proprement toutes les tâches et la lecture CAN."""
@@ -159,17 +175,6 @@ class CANApplication(QMainWindow):
             except asyncio.CancelledError:
                 print("Tâche interrompue proprement.")
         print("Toutes les tâches ont été arrêtées.")
-
-    # Méthode du bouton Read, mêt le fonction "run()" asynchone en route -----------------------------------------------
-    def on_click_read(self) -> None:
-        print("On est renté dans on_click_read")
-        self.loop = asyncio.get_event_loop()
-        if self.loop.is_running():  # Si une boucle tourne déjà
-            print("Boucle existante détectée, dans le clique sur bouton read...")
-            asyncio.ensure_future(self.run())  # Lancer en arrière-plan
-        else:
-            print("Lancement d'une nouvelle boucle avec run_until_complete...")
-            self.loop.run_until_complete(self.run())  # Exécuter la tâche immédiatement
 
     # Méthode pour arrêter la lecture ----------------------------------------------------------------------------------
     def on_click_stop(self):
@@ -226,16 +231,24 @@ class CANApplication(QMainWindow):
     # Méthode pour ouvrir la fenêtre des Status ------------------------------------------------------------------------
     def on_click_status(self):
         try:
-            self._status = self._can_interface.status()
+            if self._encours:
+                self._status = self._can_interface.status()
+
             print("STATUS = " + str(self._status))
+
+            if self._handle != 256:
+                self._status = 0
+
             # Crée la fenêtre `FenetreStatus` avec une référence vers la fenêtre principale (passée dans "self.main_window")
             self._fenetre_status = FenetreStatus(self._status, self._main_window)
             # Afficher la fenêtre des Status
             self._fenetre_status.show()
             self._fenetre_status.align_with_main_window()
+            return self._fenetre_status
 
         except Exception as e:
             print(f"Erreur lors de l'ouverture de la fenêtre Status : {e}")
+            return None
 
     # Méthode qui ferme la feneêtre Status -----------------------------------------------------------------------------
     def fermer_fenetre_status(self):

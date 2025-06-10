@@ -16,7 +16,6 @@ from PyQt5.QtCore import Qt, QAbstractTableModel, QModelIndex, pyqtSlot
 from PyQt5 import uic
 from PyQt5.QtGui import QIcon
 from quart import Quart, render_template, jsonify, Response
-
 from serveur_aide import start_help_server
 
 # Import des packages personnalisés

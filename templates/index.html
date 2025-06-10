@@ -114,7 +114,7 @@ mbtilesLayer.on('tileerror', (e) => {
         }
 
         // Mise à jour toutes les 3 secondes
-        setInterval(updatePosition, 30000);
+        setInterval(updatePosition, 3000);
 
         // Mise à jour des informations lors du déplacement/zoom
         map.on('moveend zoomend', () => {

@@ -17,10 +17,12 @@
             <ul>
                 <li><a href="https://www.canusb.com/files/canusb_setup_win64.zip">Récuperez</a> le driver "CANUSB dll"</li>
                 <li><a href="https://ftdichip.com/wp-content/uploads/2025/03/CDM2123620_Setup.zip">Récupérez</a> le driver "D2XX" </li>
-                <li>Exécutez les deux setup.exe</li>
+                <li>Exécutez les deux setup.exe<br></li>
+                <li><a href="https://www.canusb.com/files/canusb_dll_driver.zip">Je vous recommande</a> de récupérer la dll "canusbdrv64.dll" situé sur ce téléchargement.<br> </li>
+                Car il y a un problème sur la "canusbdrv64.dll" fournit par le premier setup.
             </ul>
         </li>
-        <br/>
+        <br>
         <li>Branchement sur le bus NMEA 2000.
             <div class="map-preview">
                 <img src="{{ url_for('static', filename='images/cia102.gif') }}"
@@ -44,10 +46,12 @@
                 box-shadow: 0 2px 4px rgba(0,0,0,0.1);
                 display: block;">
             </div>
+        </li>
             <ul>
                 <li>Vous n'avez qu'à brancher les bornes CAN_H et CAN_L.</li>
                 <li>Si vous êtes branché à la place du bouchon il faut ajouter une resistance de 120 Ohms.</li>
-                <div class="map-preview">
+            </ul>
+        <div class="map-preview">
                 <img src="{{ url_for('static', filename='images/PriseNMEA2000.png') }}"
                 alt="Aperçu de la carte"
                 style="width: 15%;
@@ -70,15 +74,13 @@
                 display: block;">
                 </div>
             </ul>
-        </li>
-        <br/>
         <li>Maintenant, vous avez tout raccordé et mis vos drivers dans votre PC.
             <ul>
                 <li>Mettez en route votre réseau NMEA 2000.</li>
-                <li>Utilisez l'application.</li>
+                <li>Utilisez l'application.<br/></li>
             </ul>
         </li>
-        <br/>
+
     </ol>
 
     <div class="tip">
@@ -86,7 +88,7 @@
     </div>
 
     <h3>Exemple du programme pour utiliser les fonctions dll</h3>
-    <ul>
+
         <pre><code class="python">
             import ctypes
 from ctypes import Structure, c_ubyte,c_long, c_int, POINTER, Array
@@ -190,7 +192,6 @@ class CANDll:
         return self._etat
  # ==================================== FIN DE LA CLASSE CANDll ========================================================
         </code></pre>
-     </ul>
 </div>
 
 <script>
