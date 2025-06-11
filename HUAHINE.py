@@ -1,9 +1,7 @@
 """  principal """
 import asyncio
 import csv
-import os
 import subprocess
-import sys
 import webbrowser
 import qasync
 import ctypes
@@ -13,7 +11,6 @@ from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QTableView, QMessageBox, QFileDialog
 from PyQt5.QtWidgets import QMainWindow, QAbstractItemView
 from PyQt5.QtCore import Qt, QAbstractTableModel, QModelIndex, pyqtSlot
-from PyQt5 import uic
 from PyQt5.QtGui import QIcon
 from quart import Quart, render_template, jsonify, Response
 from serveur_aide import start_help_server
@@ -24,6 +21,18 @@ from Package.TempsReel import TempsReel
 from Package.NMEA_2000 import NMEA2000
 from Package.CANApplication import CANApplication
 from Package.constante import *
+
+import os
+import sys
+from PyQt5.uic import loadUi
+
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
 
 # Au niveau global de votre fichier, définissez coordinates comme ceci :
 coordinates: dict[str, float] = {
@@ -152,7 +161,9 @@ class MainWindow(QMainWindow):
         self._reply = None
         self._selected_file_path = None
         self.loop = None
-        uic.loadUi('Alain.ui', self)
+        loadUi(resource_path('Alain.ui'), self)
+        # uic.loadUi('Alain.ui', self)
+
         self._fenetre_status = None
         self._file_path = None
         self._can_interface = None
@@ -172,7 +183,7 @@ class MainWindow(QMainWindow):
         self.line_table.setText("5000") # Taille pour le buffer tournant
 
         # Crée l'instance des Classes
-        self.setWindowIcon(QIcon("icones/ps2.png"))
+        self.setWindowIcon(QIcon("ps2.ico"))
         self._temps_reel = TempsReel()
         self._nmea_2000 = NMEA2000(self)
         self._can_interface = CANDll(self._stop_flag)
@@ -803,7 +814,7 @@ class MainWindow(QMainWindow):
         try:
             msg_box = QMessageBox()
             msg_box.setWindowTitle(titre)
-            msg_box.setWindowIcon(QIcon("icones/ps2.png"))
+            msg_box.setWindowIcon(QIcon("ps2.ico"))
 
             # Ajout des quatre boutons personalisés.
             bouton_oui = msg_box.addButton(premier, QMessageBox.ActionRole)
@@ -846,7 +857,7 @@ class MainWindow(QMainWindow):
         # Crée une boîte de dialogue "À propos"
             about_box = QMessageBox()
             about_box.setWindowTitle("À propos de l'application")
-            about_box.setWindowIcon(QIcon("icones/ps2.png"))
+            about_box.setWindowIcon(QIcon("ps2.ico"))
             about_box.setText(
                 "<h3>Application Huahine</h3>"
                 "<p>Version 1.0</p>"
