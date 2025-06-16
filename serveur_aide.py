@@ -1,4 +1,5 @@
 from flask import Flask, render_template
+from threading import Thread
 
 app = Flask(__name__,
     template_folder='aide/templates',
@@ -32,7 +33,6 @@ def run_server():
     app.run(port=5001)
 
 def start_help_server():
-    from threading import Thread
     server_thread = Thread(target=run_server)
     server_thread.daemon = True
     server_thread.start()

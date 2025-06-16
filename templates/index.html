@@ -17,6 +17,11 @@
             border-radius: 4px;
             font-family: monospace;
         }
+        .leaflet-control-layers {
+            background: white;
+            padding: 10px;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
@@ -42,94 +47,107 @@
 
         // Définir un icône personnalisé pour la position
         var customIcon = L.icon({
-            iconUrl: '/static/icone/VoilierImage.png', // URL de l'image
-            iconSize: [35, 55], // Taille de l'icône (largeur, hauteur)
-            iconAnchor: [16, 55], // Point d'ancrage (bas-centre de l'image)
-            popupAnchor: [0, -55] // Position de la popup par rapport au marqueur
+            iconUrl: '/static/icone/VoilierImage.png',
+            iconSize: [35, 55],
+            iconAnchor: [16, 55],
+            popupAnchor: [0, -55]
         });
+
+        // Fond de carte OpenStreetMap
+        var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Couche MBTiles
+        var mbtilesLayer = L.tileLayer('/tiles/{z}/{x}/{y}.png', {
+            tms: true,
+            opacity: 0.7,
+            attribution: 'MBTiles Map',
+            maxZoom: 18,
+            minZoom: 3
+        }).addTo(map);
+
+        // Contrôle des couches
+        var baseMaps = {
+            "OpenStreetMap": osm,
+            "Carte Marine": mbtilesLayer
+        };
+        L.control.layers(baseMaps, null, {collapsed: false}).addTo(map);
 
         // Ajouter un marqueur avec l'icône personnalisée
         var currentMarker = L.marker(initialPosition, { icon: customIcon }).addTo(map)
             .bindPopup("Salut tout le monde ! Je suis HUAHINE")
             .openPopup();
 
-        // Suivi de ma position
-        var polyline = L.polyline([initialPosition], {color: 'red'}).addTo(map);
+        // Suivi de la position
+        var polyline = L.polyline([initialPosition], {
+            color: 'red',
+            weight: 3,
+            opacity: 0.7
+        }).addTo(map);
 
         updateInfo(`Zoom: ${map.getZoom()}<br>Position: ${initialPosition[0].toFixed(5)}, ${initialPosition[1].toFixed(5)}`);
 
-        const mbtilesLayer = L.tileLayer('/tiles/{z}/{x}/{y}.png', {
-            tms: true,
-            opacity: 1.0,
-            attribution: 'Google - Map'
-        }).addTo(map);
-
-        // Ajouter un gestionnaire d'événements pour le clic sur le marqueur
+        // Événements pour le marqueur
         currentMarker.on('click', function() {
             this.openPopup();
         });
 
+        // Événements pour les tuiles
         mbtilesLayer.on('load', function() {
-    console.log('Couche de tuiles chargée avec succès');
-});
+            console.log('Couche de tuiles chargée avec succès');
+        });
 
-mbtilesLayer.on('loading', function() {
-    console.log('Chargement des tuiles en cours...');
-});
+        mbtilesLayer.on('loading', function() {
+            console.log('Chargement des tuiles en cours...');
+        });
 
-// Améliorer le log des erreurs
-mbtilesLayer.on('tileerror', (e) => {
-    console.error('Erreur tuile:', {
-        coords: e.coords,
-        url: e.tile.src,
-        status: e.tile.errorStatus
-    });
-});
+        mbtilesLayer.on('tileerror', function(e) {
+            console.error('Erreur tuile:', {
+                coords: e.coords,
+                url: e.tile.src,
+                status: e.tile.errorStatus
+            });
+        });
 
-
-        // Fonction pour mettre à jour la position sur la carte
+        // Fonction de mise à jour de la position
         async function updatePosition() {
             try {
-                // Appel à une API Flask pour récupérer les coordonnées
                 const response = await fetch('/api/get_coordinates');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
                 const data = await response.json();
 
-                // Extraction des nouvelles coordonnées
-                const { latitude, longitude } = data;
+                if (data.latitude && data.longitude) {
+                    const newLatLng = new L.LatLng(data.latitude, data.longitude);
+                    currentMarker.setLatLng(newLatLng);
+                    polyline.addLatLng(newLatLng);
 
-                // Mise à jour du marqueur personnalisé
-                var newLatLng = new L.LatLng(latitude, longitude);
-                currentMarker.setLatLng(newLatLng);
+                    // Mise à jour de l'info sans recentrer la carte
+                    updateInfo(`Zoom: ${map.getZoom()}<br>Position: ${data.latitude.toFixed(5)}, ${data.longitude.toFixed(5)}`);
 
-                // Recentre la carte tout en gardant le niveau de zoom
-                map.setView(newLatLng, map.getZoom());
-
-                // Ajouter les nouvelles coordonnées à l'itinéraire (polyligne)
-                polyline.addLatLng(newLatLng);
-
-                console.log(`Position mise à jour : latitude=${latitude}, longitude=${longitude}`);
+                    console.log(`Position mise à jour : ${data.latitude}, ${data.longitude}`);
+                }
             } catch (err) {
-                console.error("Erreur de mise à jour des coordonnées :", err);
+                console.error("Erreur de mise à jour des coordonnées:", err);
             }
         }
 
         // Mise à jour toutes les 3 secondes
-        setInterval(updatePosition, 3000);
+        const updateInterval = setInterval(updatePosition, 3000);
 
-        // Mise à jour des informations lors du déplacement/zoom
+        // Événements de la carte
         map.on('moveend zoomend', () => {
             const center = map.getCenter();
             updateInfo(`Zoom: ${map.getZoom()}<br>Position: ${center.lat.toFixed(5)}, ${center.lng.toFixed(5)}`);
         });
 
-        // Log des événements de tuiles
-        mbtilesLayer.on('tileloadstart', (e) => {
-            console.log('Chargement tuile:', e.coords);
-        });
-
-        mbtilesLayer.on('tileerror', (e) => {
-            console.error('Erreur tuile:', e.coords);
-        });
+        // Nettoyage à la fermeture
+        window.onbeforeunload = function() {
+            clearInterval(updateInterval);
+        };
     </script>
 </body>
 </html>

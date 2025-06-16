@@ -13,9 +13,9 @@ from PyQt5.QtWidgets import QMainWindow, QAbstractItemView
 from PyQt5.QtCore import Qt, QAbstractTableModel, QModelIndex, pyqtSlot
 from PyQt5.QtGui import QIcon
 from quart import Quart, render_template, jsonify, Response
-from serveur_aide import start_help_server
 
 # Import des packages personnalisés
+from serveur_aide import start_help_server
 from Package.CAN_dll import CANDll
 from Package.TempsReel import TempsReel
 from Package.NMEA_2000 import NMEA2000
@@ -27,17 +27,14 @@ import sys
 from PyQt5.uic import loadUi
 
 def resource_path(relative_path):
-    try:
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(".")
+    base_path = getattr(sys, '_MEIPASS', os.path.abspath("."))
     return os.path.join(base_path, relative_path)
 
 
 # Au niveau global de votre fichier, définissez coordinates comme ceci :
 coordinates: dict[str, float] = {
-    "latitude": 0.0,
-    "longitude": 0.0
+    "latitude": 43.243757,
+    "longitude": 5.365660
 }
 
 class CoordinatesManager:
@@ -64,6 +61,7 @@ class CoordinatesManager:
         except Exception as e:
             print(f"Erreur inattendue : {e}")
             raise
+
 
 # ********************************** CLASSE MODELE DE LA TABLE *********************************************************
 # Cette classe sert de modèle à la table incluse dans MainWindow().
@@ -161,8 +159,11 @@ class MainWindow(QMainWindow):
         self._reply = None
         self._selected_file_path = None
         self.loop = None
+        # self.setWindowIcon(QIcon('ps2.ico'))
+
         loadUi(resource_path('Alain.ui'), self)
         # uic.loadUi('Alain.ui', self)
+        self.quart_running = False  # Pour suivre l'état du serveur
 
         self._fenetre_status = None
         self._file_path = None
@@ -745,58 +746,61 @@ class MainWindow(QMainWindow):
         webbrowser.open("http://127.0.0.1:5001/")
 
     # Méthode qui lance la "quart_app" ---------------------------------------------------------------------------------
-    async def lancer_quart(self):  # Un seul self ici, pas dans les parenthèses
-        """Lance le serveur Quart dans une boucle asyncio."""
-        print("Démarrage du serveur Quart...")
+    async def lancer_quart(self):
+        if self.quart_running:
+            return
 
         try:
-            if quart_app is None:
-                raise RuntimeError("quart_app n'est pas défini. Assurez-vous de l'initialiser correctement.")
-
-            self.quart_task = asyncio.create_task(
-                quart_app.run_task(host="127.0.0.1", port=5000)
+            self.quart_running = True
+            await quart_app.run_task(
+                host='127.0.0.1',
+                port=5000,
+                debug=False
             )
-            await asyncio.sleep(0.1)
-            print("Serveur Quart démarré avec succès")
-
         except Exception as e:
-            print(f"Erreur lors du démarrage du serveur Quart: {e}")
+            self.quart_running = False
+            print(f"Erreur lors du lancement du serveur: {e}")
+            QMessageBox.critical(self, "Erreur", f"Erreur du serveur: {str(e)}")
 
-    # Méthode pour arrêter le Quart ------------------------------------------------------------------------------------
     async def arreter_quart(self):
         """Arrête proprement le serveur Quart"""
-        if self.quart_task and not self.quart_task.done():
+        if hasattr(self, 'quart_task') and self.quart_task and not self.quart_task.done():
             try:
-                # Arrêter le serveur Quart
+                # Fermer toutes les connexions actives
+                if hasattr(quart_app, 'clients'):
+                    for client in quart_app.clients:
+                        try:
+                            client.close()
+                        except:
+                            pass
+
+                # Arrêter le serveur
                 await quart_app.shutdown()
+
                 # Annuler la tâche
                 self.quart_task.cancel()
                 try:
-                    await self.quart_task
-                except asyncio.CancelledError:
-                    print("Serveur Quart arrêté avec succès")
+                    await asyncio.wait_for(self.quart_task, timeout=5.0)
+                except (asyncio.CancelledError, asyncio.TimeoutError):
+                    pass
+
+                print("Serveur Quart arrêté avec succès")
+
+                # Nettoyer la référence
+                self.quart_task = None
+
             except Exception as e:
                 print(f"Erreur lors de l'arrêt du serveur Quart: {e}")
 
-    # Méthode qui appelle "lancer_quart" en asynchtone -----------------------------------------------------------------
-    def on_click_map(self) -> None:
-        """Méthode pour lancer la tâche Flask et ouvrir la carte."""
-        print("Bouton 'Map' cliqué !")
-
-        # Lancer Quark comme une tâche asyncio
-        if self.event_loop is None:
-            self.event_loop = asyncio.get_event_loop()
-
-        if not self.event_loop.is_running():
-            print("Lancement de la boucle asyncio pour Quart...")
-            self.event_loop.run_until_complete(self.lancer_quart())  # Correct
-        else:
-            print("Boucle asyncio déjà en cours, ajout de Flask en tant que tâche...")
-            # Lancer Quart dans la boucle en parallèle
-            asyncio.ensure_future(self.lancer_quart())  # Correct
-
-        # Ouvrir la carte dans le navigateur
-        webbrowser.open("http://127.0.0.1:5000/map")
+    def on_click_map(self):
+        """Gestionnaire du clic sur le bouton Map"""
+        try:
+            print("Bouton 'Map' cliqué !")
+            # Au lieu de lancer une nouvelle boucle, ouvrir simplement le navigateur
+            webbrowser.open('http://127.0.0.1:5000/')
+        except Exception as e:
+            print(f"Erreur dans on_click_map: {e}")
+            QMessageBox.critical(self, "Erreur", f"Une erreur est survenue: {str(e)}")
 
     # Méthode pour avoir quatre boutons personalisés, qui sont le précédent, le suivant, valider et annuler ------------
     @staticmethod
@@ -931,30 +935,30 @@ async def map_page():
 @quart_app.route('/tiles/<int:z>/<int:x>/<int:y>.png')
 async def get_tile(z, x, y):
     try:
-        # Convertir y en coordonnées TMS
-        y_tms = (1 << z) - 1 - y
-
-        conn = sqlite3.connect('static/cartes.mbtiles')
-        cursor = conn.cursor()
-
-        cursor.execute("""
-            SELECT tile_data
-            FROM tiles 
-            WHERE zoom_level = ? AND tile_column = ? AND tile_row = ?
-        """, (z, x, y))
-
-        result = cursor.fetchone()
-        conn.close()
-
-        if result and result[0]:
-            return Response(result[0], mimetype='image/png')
+        tile_path = resource_path(os.path.join('static', 'tiles', f'{z}_{x}_{y}.png'))
+        if os.path.exists(tile_path):
+            with open(tile_path, 'rb') as f:
+                tile_data = f.read()
+            return Response(tile_data, mimetype='image/png')
         else:
-            print(f"Tuile non trouvée: z={z}, x={x}, y={y_tms}")
-            return '', 204
-
+            return Response('', status=404)
     except Exception as e:
-        print(f"Erreur: {str(e)}")
-        return str(e), 500
+        print(f"Erreur lors de la récupération de la tuile : {e}")
+        return Response('', status=500)
+
+
+@quart_app.after_request
+async def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+    return response
+
+# Routes pour l'application web
+@quart_app.route('/')
+async def index():
+    return await render_template('index.html')
+
 
 @quart_app.route('/api/get_coordinates')
 async def get_coordinates():
@@ -964,18 +968,41 @@ async def get_coordinates():
         print(f"Erreur lors de la récupération des coordonnées : {e}")
         return jsonify({"error": str(e)}), 500
 # ===================================== FIN DE QUART ====================================================================
-
 if __name__ == "__main__":
     print(f"SQLite Version: {sqlite3.sqlite_version}")
+    print("=== Serveur de tuiles MBTiles ===")
+    print("Accédez à http://127.0.0.1:5000/ pour voir la carte")
 
-    app = QApplication(sys.argv)
+    try:
+        app = QApplication(sys.argv)
 
-    # Intégration asyncio avec PyQt5
-    loop = qasync.QEventLoop(app)
-    asyncio.set_event_loop(loop)
+        # Création de la fenêtre principale
+        window = MainWindow()
+        window.show()
 
-    window = MainWindow()
+        # Intégration asyncio avec PyQt5
+        loop = qasync.QEventLoop(app)
+        asyncio.set_event_loop(loop)
 
-    # Intégration avec la boucle PyQt5
-    with loop:
-        loop.run_forever()
+        # Démarrage du serveur Quart
+        loop.create_task(window.lancer_quart())
+
+        def handle_shutdown():
+            if window.quart_running:
+                async def cleanup():
+                    try:
+                        await quart_app.shutdown()
+                    except Exception as e:
+                        print(f"Erreur lors de l'arrêt du serveur: {e}")
+                loop.create_task(cleanup())
+
+        app.aboutToQuit.connect(handle_shutdown)
+
+        # Démarrage de la boucle principale
+        with loop:
+            loop.run_forever()
+
+    except Exception as e:
+        print(f"Erreur principale: {e}")
+        QMessageBox.critical(None, "Erreur", f"Une erreur s'est produite: {str(e)}")
+        sys.exit(1)

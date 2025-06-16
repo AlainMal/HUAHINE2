@@ -1,7 +1,9 @@
 from Package.CAN_dll import CanMsg
 
+# ======================================================================================================================
 # Cette classe sert uniquement à traiter les résultats en temps réel.
 # C'est prévu de lui faire traiter le NMEA 2000 en temps réel.
+# Ces méthodes sont synchrone car on ne peut pas extraire tous en mode asynchrone
 # ======================================================================================================================
 class TempsReel:
     def __init__(self):
@@ -11,11 +13,11 @@ class TempsReel:
     @staticmethod
     def TempsReel(msg:CanMsg, file_path, coche_file, coche_buffer,coche_nmea, main_window):
         # Initialise datas comme un str vide.
-        datas = ""
+        # datas = ""
         # On a défini les huits octets dans "datas".
-        for i in range(msg.len):
+        # for i in range(msg.len):
             # On commence par un espace, car ça fini par le dernier octet.
-            datas += " " + format(msg.data[i], "02X")
+        #    datas += " " + format(msg.data[i], "02X")
 
         if msg:
             # On met le réulltat dans un fichier si la case à cocher est validée.
@@ -25,7 +27,7 @@ class TempsReel:
                     datas = ' '.join([f"{byte:02X}" for byte in msg.data])  # Format avec des bytes en hexadécimal
                     file.write(f"{msg.TimeStamp} {msg.ID:08X} {msg.len}{datas}\n")
 
-            # On met le réulltat dans la table si la case à cocher est validée
+            # On met le résultat dans la table si la case à cocher est validée
             if coche_buffer:
                 # Préparation d'un tuple pour la table
                 tuple_modifie = (
